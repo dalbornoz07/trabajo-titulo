@@ -9,16 +9,20 @@ Estructura de datos
 ------------
     ├── data
        ├── external       <- Data from third party sources.
+       ├── raw            <- The original, immutable data dump.
+       |    ├── 2020-2
+       |    ├── 2021-1
+       |    └── 2021-2
        ├── interim        <- Intermediate data that has been transformed.
        |    ├── 2020-2
        |    ├── 2021-1
        |    └── 2021-2
-       ├── processed      <- The final, canonical data sets for modeling.
-       |    ├── 2020-2
-       |    ├── 2021-1
-       |    └── 2021-2
-       └── raw            <- The original, immutable data dump.
+       └── processed      <- The final, canonical data sets for modeling.
            ├── 2020-2
            ├── 2021-1
-           └── 2021-2
+           ├── 2021-2
+           └── Modelos resultados  <- resultados de los modelos de clustering y reglas de asociación
+                ├── Cluster
+                └── Asociación
+      
  
