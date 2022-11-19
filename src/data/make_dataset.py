@@ -17,6 +17,7 @@ from multiprocessing import Process, Lock
 
 #driver = webdriver.Firefox()
 
+
 #Global variables
 HOME = '/'.join(os.getcwd().split('/')[:-2])
 RAW= os.path.join(HOME,'data/raw')
@@ -34,18 +35,13 @@ def get_files_list(condition:str='')->List[str]:
     return [ os.path.join(root,name) for root,_,filename in os.walk(os.path.join(RAW,condition),topdown=True)  for name in filename ]
 
 
-def gen_list_cols(text:str,start:int=1,end:int=12)->List[str]:
-    """
-    Descripción:
-    Parámetros:
-    Retorno:
-    """
+def aux_gen_list_cols(text:str='',start:int=1,end:int=12)->List[str]:
     return [text.format(i) for i in range(start,end)]
 
 
 def create_campus_csv(archivo:str,anno:int,semestre:int)->None:
     """
-    Descripción: 
+    Descripción:  Genera archivos csv con los datos de los estudiantes para que luego sean transformados y procesados
     Parámetros: - archivo(str) nombre del archivo en excel que se va trabajar
                 - anno (int) año trabajado
                 - semestre (int) semestre trabajado (1 o 2)
@@ -73,10 +69,10 @@ def create_campus_csv(archivo:str,anno:int,semestre:int)->None:
 
         _columns = ['RUT','DV.1','Nombre','VTR','C1','C2','CR','NF','Carrera']
 
-        controles = gen_list_cols('S{}',1,11)
-        tareas = gen_list_cols('T{}',1,11)
-        formativos = gen_list_cols('F{}',1,11)
-        actividades = gen_list_cols('SM{}',1,9)
+        controles = aux_gen_list_cols('S{}',1,11)
+        tareas = aux_gen_list_cols('T{}',1,11)
+        formativos = aux_gen_list_cols('F{}',1,11)
+        actividades = aux_gen_list_cols('SM{}',1,9)
     
         sheet_data.fillna(0,inplace=True)
         
@@ -105,6 +101,13 @@ def create_campus_csv(archivo:str,anno:int,semestre:int)->None:
 
 
 def create_campus_csv_AULA(archivo:str,anno:int,semestre:int)->None:
+    """
+    Descripción:  Genera archivos csv con los datos de los estudiantes  que provienen de la plataforma AULA, para que luego sean transformados y procesados
+    Parámetros: - archivo(str) nombre del archivo en excel que se va trabajar
+                - anno (int) año trabajado
+                - semestre (int) semestre trabajado (1 o 2)
+    Retorno: - 
+    """
     id_campus = [key for key,val in CAMPUS.items() if val in archivo][0]
     df_base = pd.read_excel(pd.ExcelFile(archivo),None,na_filter=False,skiprows=0,header=0)
     
@@ -133,14 +136,10 @@ def create_campus_csv_AULA(archivo:str,anno:int,semestre:int)->None:
 
 
 
-def main():
+def generate(annos_list:list[str])->None:
     threads=[]
     temp='{}-{}'
-    
-    annos = ['2020-2','2021-1','2021-2']
-    
-    for i in annos:
-        print(i)
+    for i in annos_list:
         year,sem = i.split('-')
         year = int(year)
         sem = int(sem)
@@ -160,6 +159,7 @@ def main():
             
     for t in threads:
         t.join()
-
+        
 if __name__=='__main__':
-    main()
+    annos=['2020-2','2021-1','2021-2']
+    generate(annos)
